@@ -6,12 +6,19 @@ public class Handler : MonoBehaviour
 {
     Invoker invoker;
     CircleCtrl _controller;
+    EventType selectType = EventType.Start;
+
+    GameObject showCircle;
+
+    int limitNum = 3;
+    int startCount, collCount1, collCount2;
 
     void Start()
     {
         //인보커 생성
         invoker = new();
         _controller = FindObjectOfType<CircleCtrl>(true);
+        showCircle = GameObject.Find("ShowCircle");
 
         //커맨드 생성
         Left left = new(_controller);
@@ -22,13 +29,81 @@ public class Handler : MonoBehaviour
         invoker.SetCommand("left", left);
         invoker.SetCommand("right", right);
     }
-    public void ClickBtn(string name)
+    public void SelectTypeBtn(int typeIndex)
     {
-        EventBus.Subscribe(EventType.Start, () => invoker.ExecuteCommand(name));
+        switch (typeIndex)
+        {
+            case 0:
+                selectType = EventType.Start; break;
+            case 1:
+                selectType = EventType.Collision1; break;
+            case 2:
+                selectType = EventType.Collision2; break;
+        }
     }
-    
+    public void AddEvent(string name)
+    {
+        switch (selectType)
+        {
+            case EventType.Start:
+                if (startCount > limitNum) break;
+                else if (startCount == limitNum)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                else
+                    startCount += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                break;
+            case EventType.Collision1:
+                if (collCount1 >= limitNum) break;
+                else if (collCount1 == limitNum)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                else
+                    collCount1 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                break;
+            case EventType.Collision2:
+                if (collCount2 >= limitNum) break;
+                else if (collCount2 == limitNum)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                else
+                    collCount2 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                break;
+        }
+    }
+
+    public void RemoveEvent()
+    {
+        switch (selectType)
+        {
+            case EventType.Start:
+                if (startCount <= 0) break;
+                startCount -= EventBus.Unsubscribe(selectType);
+                break;
+            case EventType.Collision1:
+                if (collCount1 <= 0) break;
+                collCount1 -= EventBus.Unsubscribe(selectType);
+                break;
+            case EventType.Collision2:
+                if (collCount2 <= 0) break;
+                collCount2 -= EventBus.Unsubscribe(selectType);
+                break;
+        }
+    }
+
+    public void RemoveAllEvent()
+    {
+        EventBus.Clear();
+        ButtonManager.instance.AllBtnActClear();
+        startCount = 0; collCount1 = 0; collCount2 = 0;
+    }
+
     public void StartGame()
     {
         _controller.gameObject.SetActive(true);
+    }
+
+    public void RetryGame()
+    {
+        _controller.CircleReset();
+        _controller.gameObject.SetActive(false);
+        showCircle.SetActive(true) ;
     }
 }

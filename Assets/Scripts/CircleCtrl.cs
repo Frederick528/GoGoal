@@ -27,6 +27,14 @@ public class CircleCtrl : MonoBehaviour
         }
     }
 
+    public void CircleReset()
+    {
+        numberOfCollision = 0;
+        transform.position = new Vector3(-2,0,0);
+        transform.rotation = Quaternion.identity;
+        rd.velocity = Vector3.zero;
+    }
+
     public void Right()
     {
         rd.AddForce(Vector2.right * 200);
