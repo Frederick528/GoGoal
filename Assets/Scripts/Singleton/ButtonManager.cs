@@ -16,6 +16,11 @@ public class ButtonManager : MonoBehaviour
     [SerializeField] Btn[] collEvents1;
     [SerializeField] Btn[] colltEvents2;
 
+    Transform eventBtns;
+    [SerializeField] GameObject[] eventBtnsArray;
+    int curEBAIdx = 0;  // EBA = Event Buttons Array
+
+
     public Btn currBtn {get; private set;}
 
     private void Awake()
@@ -31,6 +36,17 @@ public class ButtonManager : MonoBehaviour
         startEvents = startContent.GetComponentsInChildren<Btn>();
         collEvents1 = collContent1.GetComponentsInChildren<Btn>();
         colltEvents2 = collContent2.GetComponentsInChildren<Btn>();
+
+        eventBtns = GameObject.Find("EventBtns").transform;
+        eventBtnsArray = new GameObject[eventBtns.childCount];
+
+        for (int i = 0; i < eventBtnsArray.Length; i++)
+        {
+            eventBtnsArray[i] = eventBtns.GetChild(i).gameObject;
+            //eventBtnsArray[i].SetActive(false);
+        }
+
+        //eventBtnsArray[0].SetActive(true);
 
         currBtn = startEvents[0];
         currBtn.img = currBtn.GetComponent<Image>();    // Get the current button image before gane start. (Because execution order issue for Btn and Button manager)
@@ -80,5 +96,17 @@ public class ButtonManager : MonoBehaviour
         {
             BtnChange(btn);
         }
+    }
+
+    public void AddEventBtnsArrayIdx(int addIdx)
+    {
+        eventBtnsArray[curEBAIdx].SetActive(false);
+        curEBAIdx += addIdx;
+        if (curEBAIdx > eventBtnsArray.Length - 1)
+            curEBAIdx = 0;
+        else if (curEBAIdx < 0)
+            curEBAIdx = eventBtnsArray.Length - 1;
+
+        eventBtnsArray[curEBAIdx].SetActive(true);
     }
 }
