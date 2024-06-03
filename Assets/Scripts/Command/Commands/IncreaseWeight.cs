@@ -1,14 +1,14 @@
-public class Left : Command
+public class IncreaseWeight : Command
 {
     private CircleCtrl _controller;
 
-    public Left(CircleCtrl controller)
+    public IncreaseWeight(CircleCtrl controller)
     {
         _controller = controller;
     }
 
     public override void Execute()
     {
-        _controller.Left();
+        _controller.Weight(100);
     }
 }

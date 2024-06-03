@@ -23,11 +23,27 @@ public class Handler : MonoBehaviour
         //커맨드 생성
         Left left = new(_controller);
         Right right = new(_controller);
+        Up up = new(_controller);
+
+        IncreaseGravity iG = new();
+        DecreaseGravity dG = new();
+        ReverseGravity rG = new();
+
+        IncreaseWeight iW = new(_controller);
+        DecreaseWeight dW = new(_controller);
+
 
 
         //인보커에 커맨드를 세팅해서 인보커가 커맨드를 실행할 수 있게함.
         invoker.SetCommand("left", left);
         invoker.SetCommand("right", right);
+        invoker.SetCommand("up", up);
+
+        invoker.SetCommand("iG", iG);
+        invoker.SetCommand("dG", dG);
+        invoker.SetCommand("rG", rG);
+        invoker.SetCommand("iW", iW);
+        invoker.SetCommand("dW", dW);
     }
     public void SelectTypeBtn(int typeIndex)
     {
@@ -74,15 +90,15 @@ public class Handler : MonoBehaviour
         switch (selectType)
         {
             case EventType.Start:
-                if (startCount <= 0) break;
+                if (startCount <= 0 || ButtonManager.instance.currBtn == null) break;
                 startCount -= EventBus.Unsubscribe(selectType);
                 break;
             case EventType.Collision1:
-                if (collCount1 <= 0) break;
+                if (collCount1 <= 0 || ButtonManager.instance.currBtn == null) break;
                 collCount1 -= EventBus.Unsubscribe(selectType);
                 break;
             case EventType.Collision2:
-                if (collCount2 <= 0) break;
+                if (collCount2 <= 0 || ButtonManager.instance.currBtn == null) break;
                 collCount2 -= EventBus.Unsubscribe(selectType);
                 break;
         }
@@ -102,6 +118,7 @@ public class Handler : MonoBehaviour
 
     public void RetryGame()
     {
+        Physics.gravity = new Vector3(0, -9.81f, 0);
         _controller.CircleReset();
         _controller.gameObject.SetActive(false);
         showCircle.SetActive(true) ;

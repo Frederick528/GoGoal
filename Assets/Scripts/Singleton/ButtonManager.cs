@@ -33,6 +33,7 @@ public class ButtonManager : MonoBehaviour
         colltEvents2 = collContent2.GetComponentsInChildren<Btn>();
 
         currBtn = startEvents[0];
+        currBtn.img = currBtn.GetComponent<Image>();    // Get the current button image before gane start. (Because execution order issue for Btn and Button manager)
         currBtn.img.color = Color.red;
     }
 
@@ -65,9 +66,19 @@ public class ButtonManager : MonoBehaviour
 
     public void BtnClear()
     {
-        if (currBtn == null)
-            return;
         currBtn.img.color = Color.white;
         currBtn = null;
+    }
+
+    public void SelectBtn(Btn btn)
+    {
+        if (currBtn == btn)
+        {
+            BtnClear();
+        }
+        else
+        {
+            BtnChange(btn);
+        }
     }
 }

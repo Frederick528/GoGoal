@@ -8,23 +8,13 @@ public class Btn : MonoBehaviour
 {
     public UnityAction listener;
 
-    Button btn;
     public Image img;
+    Button btn;
 
     private void Start()
     {
-        btn = GetComponent<Button>();
         img = GetComponent<Image>();
-        btn.onClick.AddListener(() =>
-        {
-            if (ButtonManager.instance.currBtn == this)
-            {
-                ButtonManager.instance.BtnClear();
-            }
-            else
-            {
-                ButtonManager.instance.BtnChange(this);
-            }
-        });
+        btn = GetComponent<Button>();
+        btn.onClick.AddListener(() => ButtonManager.instance.SelectBtn(this));
     }
 }

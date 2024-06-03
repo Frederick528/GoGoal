@@ -33,6 +33,8 @@ public class CircleCtrl : MonoBehaviour
         transform.position = new Vector3(-2,0,0);
         transform.rotation = Quaternion.identity;
         rd.velocity = Vector3.zero;
+        rd.mass = 1;
+        rd.useGravity = true;
     }
 
     public void Right()
@@ -42,5 +44,15 @@ public class CircleCtrl : MonoBehaviour
     public void Left()
     {
         rd.AddForce(Vector2.left * 200);
+    }
+
+    public void Up()
+    {
+        rd.AddForce(Vector2.up * 200);
+    }
+
+    public void Weight(float weight)
+    {
+        rd.mass *= weight;
     }
 }

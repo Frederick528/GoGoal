@@ -76,7 +76,7 @@ public class EventBus
         UnityEvent thisEvent;
         short retVal = 0;
 
-        if (ButtonManager.instance.currBtn == null) return retVal;
+        //if (ButtonManager.instance.currBtn == null) return retVal;    // check complete
 
         if (Events.TryGetValue(type, out thisEvent) && ButtonManager.instance.currBtn.listener != null)
         {
