@@ -4,38 +4,60 @@ using UnityEngine;
 
 public class CircleCtrl : MonoBehaviour
 {
-    [SerializeField]
-    Rigidbody rd;
+    private ICircleState
+        _startState, _retryState, _coll1State, _coll2State;
+    private CircleStateContext _circleStateContext;
 
-    int numberOfCollision;
+    [HideInInspector]
+    public Rigidbody rd;
 
-    private void OnEnable()
+    [HideInInspector]
+    public int numberOfCollision;
+
+    private void Start()
     {
-        EventBus.Publish(EventType.Start);
+        _circleStateContext = new CircleStateContext(this);
+
+        _startState = gameObject.AddComponent<CircleStartState>();
+        _retryState = gameObject.AddComponent<CircleRetryState>();
+        _coll1State = gameObject.AddComponent<CircleColl1State>();
+        _coll2State = gameObject.AddComponent<CircleColl2State>();
+
+        _circleStateContext.Transition(_retryState);
+
+        rd = GetComponent<Rigidbody>();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
+        // Probably add effects by stage later. ex) 5 Collision = dead.
         ++numberOfCollision;
         switch (numberOfCollision)
         {
             case 1:
-                EventBus.Publish(EventType.Collision1);
+                _circleStateContext.Transition(_coll1State);
                 break;
             case 2:
-                EventBus.Publish(EventType.Collision2);
+                _circleStateContext.Transition(_coll2State);
                 break;
         }
     }
 
-    public void CircleReset()
+    public void StartCircle()
     {
-        numberOfCollision = 0;
-        transform.position = new Vector3(-2,0,0);
-        transform.rotation = Quaternion.identity;
-        rd.velocity = Vector3.zero;
-        rd.mass = 1;
-        rd.useGravity = true;
+        if (!GameManager.instance.operable)
+            return;
+
+        GameManager.instance.operable = false;
+        _circleStateContext.Transition(_startState);
     }
+
+    public void RetryCircle()
+    {
+        GameManager.instance.operable = true;
+        _circleStateContext.Transition(_retryState);
+    }
+
 
     public void Right()
     {

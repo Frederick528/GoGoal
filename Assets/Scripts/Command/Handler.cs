@@ -8,7 +8,6 @@ public class Handler : MonoBehaviour
     CircleCtrl _controller;
     EventType selectType = EventType.Start;
 
-    GameObject showCircle;
 
     int limitNum = 3;
     int startCount, collCount1, collCount2;
@@ -18,7 +17,6 @@ public class Handler : MonoBehaviour
         //인보커 생성
         invoker = new();
         _controller = FindObjectOfType<CircleCtrl>(true);
-        showCircle = GameObject.Find("ShowCircle");
 
         //커맨드 생성
         Left left = new(_controller);
@@ -59,6 +57,9 @@ public class Handler : MonoBehaviour
     }
     public void AddEvent(string name)
     {
+        if (!GameManager.instance.operable)
+            return;
+
         switch (selectType)
         {
             case EventType.Start:
@@ -87,6 +88,9 @@ public class Handler : MonoBehaviour
 
     public void RemoveEvent()
     {
+        if (!GameManager.instance.operable)
+            return;
+
         switch (selectType)
         {
             case EventType.Start:
@@ -106,21 +110,11 @@ public class Handler : MonoBehaviour
 
     public void RemoveAllEvent()
     {
+        if (!GameManager.instance.operable)
+            return;
+
         EventBus.Clear();
         ButtonManager.instance.AllBtnActClear();
         startCount = 0; collCount1 = 0; collCount2 = 0;
-    }
-
-    public void StartGame()
-    {
-        _controller.gameObject.SetActive(true);
-    }
-
-    public void RetryGame()
-    {
-        Physics.gravity = new Vector3(0, -9.81f, 0);
-        _controller.CircleReset();
-        _controller.gameObject.SetActive(false);
-        showCircle.SetActive(true) ;
     }
 }

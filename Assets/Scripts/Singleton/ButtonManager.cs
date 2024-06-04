@@ -55,15 +55,18 @@ public class ButtonManager : MonoBehaviour
 
     public void BtnActChange(UnityAction listener)
     {
+        // Add Change Button Image Script
         currBtn.listener = listener;
     }
     public void BtnActClear()
     {
+        // Add Change Button Image Script
         currBtn.listener = null;
     }
 
     public void AllBtnActClear()
     {
+        // Add Change Button Image Script
         foreach (Btn btn in startEvents)
             btn.listener = null;
         foreach (Btn btn in collEvents1)
