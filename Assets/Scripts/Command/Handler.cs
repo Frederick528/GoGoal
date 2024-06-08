@@ -8,8 +8,6 @@ public class Handler : MonoBehaviour
     CircleCtrl _controller;
     EventType selectType = EventType.Start;
 
-
-    int limitNum = 3;
     int startCount, collCount1, collCount2;
 
     void Start()
@@ -33,15 +31,15 @@ public class Handler : MonoBehaviour
 
 
         //인보커에 커맨드를 세팅해서 인보커가 커맨드를 실행할 수 있게함.
-        invoker.SetCommand("left", left);
-        invoker.SetCommand("right", right);
-        invoker.SetCommand("up", up);
+        invoker.SetCommand("Left", left);
+        invoker.SetCommand("Right", right);
+        invoker.SetCommand("Up", up);
 
-        invoker.SetCommand("iG", iG);
-        invoker.SetCommand("dG", dG);
-        invoker.SetCommand("rG", rG);
-        invoker.SetCommand("iW", iW);
-        invoker.SetCommand("dW", dW);
+        invoker.SetCommand("IncreaseGravity", iG);
+        invoker.SetCommand("DecreaseGravity", dG);
+        invoker.SetCommand("ReverseGravity", rG);
+        invoker.SetCommand("IncreaseWeight", iW);
+        invoker.SetCommand("DecreaseWeight", dW);
     }
     public void SelectTypeBtn(int typeIndex)
     {
@@ -55,7 +53,7 @@ public class Handler : MonoBehaviour
                 selectType = EventType.Collision2; break;
         }
     }
-    public void AddEvent(string name)
+    public void AddEvent(string name, Sprite eventImage)
     {
         if (!GameManager.instance.operable)
             return;
@@ -63,25 +61,25 @@ public class Handler : MonoBehaviour
         switch (selectType)
         {
             case EventType.Start:
-                if (startCount > limitNum) break;
-                else if (startCount == limitNum)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                if (startCount > ButtonManager.instance.startLimitNum) break;
+                else if (startCount == ButtonManager.instance.startLimitNum)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 else
-                    startCount += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                    startCount += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision1:
-                if (collCount1 >= limitNum) break;
-                else if (collCount1 == limitNum)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                if (collCount1 >= ButtonManager.instance.collLimitNum1) break;
+                else if (collCount1 == ButtonManager.instance.collLimitNum1)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 else
-                    collCount1 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                    collCount1 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision2:
-                if (collCount2 >= limitNum) break;
-                else if (collCount2 == limitNum)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name));
+                if (collCount2 >= ButtonManager.instance.collLimitNum2) break;
+                else if (collCount2 == ButtonManager.instance.collLimitNum2)
+                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 else
-                    collCount2 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name));
+                    collCount2 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
         }
     }

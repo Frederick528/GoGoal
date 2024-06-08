@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class EventBus
 {
     private static readonly IDictionary<EventType, UnityEvent> Events = new Dictionary<EventType, UnityEvent>();
 
-    public static short Subscribe(EventType eventType, UnityAction listener)
+    public static short Subscribe(EventType eventType, UnityAction listener, Sprite eventImage)
     {
         UnityEvent thisEvent;
         short retVal = 0;
@@ -20,14 +21,14 @@ public class EventBus
             if (ButtonManager.instance.currBtn.listener == null)
             {
                 thisEvent.AddListener(listener);
-                ButtonManager.instance.BtnActChange(listener);
+                ButtonManager.instance.BtnActChange(listener, eventImage);
                 retVal = 1;
             }
             else
             {
                 Unsubscribe(eventType);
                 thisEvent.AddListener(listener);
-                ButtonManager.instance.BtnActChange(listener);
+                ButtonManager.instance.BtnActChange(listener, eventImage);
                 retVal = 0;
             }
         }
@@ -35,14 +36,14 @@ public class EventBus
         {
             thisEvent = new UnityEvent();
             thisEvent.AddListener(listener);
-            ButtonManager.instance.BtnActChange(listener);
+            ButtonManager.instance.BtnActChange(listener, eventImage);
             Events.Add(eventType, thisEvent);
             retVal = 1;
         }
         return retVal;
     }
 
-    public static void ChangeSubscribe(EventType eventType, UnityAction listener)
+    public static void ChangeSubscribe(EventType eventType, UnityAction listener, Sprite eventImage)
     {
         UnityEvent thisEvent;
 
@@ -52,7 +53,7 @@ public class EventBus
         {
             Unsubscribe(eventType);
             thisEvent.AddListener(listener);
-            ButtonManager.instance.BtnActChange(listener);
+            ButtonManager.instance.BtnActChange(listener, eventImage);
         }
     }
 

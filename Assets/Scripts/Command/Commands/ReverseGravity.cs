@@ -4,6 +4,6 @@ public class ReverseGravity : Command
 {
     public override void Execute()
     {
-        Physics.gravity = -Physics.gravity;
+        Physics.gravity *= -1;
     }
 }

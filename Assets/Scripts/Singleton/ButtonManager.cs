@@ -14,12 +14,17 @@ public class ButtonManager : MonoBehaviour
     GameObject collContent2;
     [SerializeField] Btn[] startEvents;
     [SerializeField] Btn[] collEvents1;
-    [SerializeField] Btn[] colltEvents2;
+    [SerializeField] Btn[] collEvents2;
 
     Transform eventBtns;
     [SerializeField] GameObject[] eventBtnsArray;
     int curEBAIdx = 0;  // EBA = Event Buttons Array
 
+    public int startLimitNum;
+    public int collLimitNum1;
+    public int collLimitNum2;
+
+    public GameObject description;
 
     public Btn currBtn {get; private set;}
 
@@ -33,59 +38,133 @@ public class ButtonManager : MonoBehaviour
         startContent = GameObject.Find("StartContent");
         collContent1 = GameObject.Find("CollContent1");
         collContent2 = GameObject.Find("CollContent2");
-        startEvents = startContent.GetComponentsInChildren<Btn>();
-        collEvents1 = collContent1.GetComponentsInChildren<Btn>();
-        colltEvents2 = collContent2.GetComponentsInChildren<Btn>();
+        startEvents = startContent.GetComponentsInChildren<Btn>(true);
+        collEvents1 = collContent1.GetComponentsInChildren<Btn>(true);
+        collEvents2 = collContent2.GetComponentsInChildren<Btn>(true);
+
+        ShowBtn();
 
         eventBtns = GameObject.Find("EventBtns").transform;
         eventBtnsArray = new GameObject[eventBtns.childCount];
 
         for (int i = 0; i < eventBtnsArray.Length; i++)
-        {
             eventBtnsArray[i] = eventBtns.GetChild(i).gameObject;
-            //eventBtnsArray[i].SetActive(false);
-        }
 
-        //eventBtnsArray[0].SetActive(true);
+        eventBtnsArray[0].SetActive(true);
+
+        description = GameObject.Find("BtnDescription");
+        description.SetActive(false);
 
         currBtn = startEvents[0];
         currBtn.img = currBtn.GetComponent<Image>();    // Get the current button image before gane start. (Because execution order issue for Btn and Button manager)
-        currBtn.img.color = Color.red;
+        currBtn.Outline = currBtn.GetComponentsInChildren<Image>(true)[1];
+        currBtn.Outline.gameObject.SetActive(true);
     }
 
-    public void BtnActChange(UnityAction listener)
+    public void ShowBtn()
     {
-        // Add Change Button Image Script
+        int i;
+        i = 0;
+        foreach (Btn btn in startEvents)
+        {
+            if (i < startLimitNum)
+            {
+                btn.gameObject.SetActive(true);
+                ++i;
+                continue;
+            }
+            btn.gameObject.SetActive(false);
+            ++i;
+        }
+        i = 0;
+        foreach (Btn btn in collEvents1)
+        {
+            if (i < collLimitNum1)
+            {
+                btn.gameObject.SetActive(true);
+                ++i;
+                continue;
+            }
+            btn.gameObject.SetActive(false);
+            ++i;
+        }
+        i = 0;
+        foreach (Btn btn in collEvents2)
+        {
+            if (i < collLimitNum2)
+            {
+                btn.gameObject.SetActive(true);
+                ++i;
+                continue;
+            }
+            btn.gameObject.SetActive(false);
+            ++i;
+        }
+    }
+
+    public void BtnActChange(UnityAction listener, Sprite eventImage)
+    {
+        currBtn.img.sprite = eventImage;
         currBtn.listener = listener;
     }
     public void BtnActClear()
     {
-        // Add Change Button Image Script
+        currBtn.img.sprite = null;
         currBtn.listener = null;
     }
 
     public void AllBtnActClear()
     {
-        // Add Change Button Image Script
+        int i;
+        i = 0;
         foreach (Btn btn in startEvents)
-            btn.listener = null;
+        {
+            if (i < startLimitNum)
+            {
+                btn.img.sprite = null;
+                btn.listener = null;
+                ++i;
+            }
+            else
+                break;
+        }
+        i = 0;
         foreach (Btn btn in collEvents1)
-            btn.listener = null;
-        foreach (Btn btn in colltEvents2)
-            btn.listener = null;
+        {
+            if (i < collLimitNum1)
+            {
+                btn.img.sprite = null;
+                btn.listener = null;
+                ++i;
+            }
+            else
+                break;
+        }
+        i = 0;
+        foreach (Btn btn in collEvents2)
+        {
+            if (i < collLimitNum2)
+            {
+                btn.img.sprite = null;
+                btn.listener = null;
+                ++i;
+            }
+            else
+                break;
+        }
     }
 
     public void BtnChange(Btn btn)
     {
         if (currBtn != null)
-            currBtn.img.color = Color.white;
+            currBtn.Outline.gameObject.SetActive(false);
         currBtn = btn;
-        currBtn.img.color = Color.red;
+        currBtn.Outline.gameObject.SetActive(true);
     }
 
     public void BtnClear()
     {
-        currBtn.img.color = Color.white;
+        currBtn.Outline.gameObject.SetActive(false);
         currBtn = null;
     }
 
