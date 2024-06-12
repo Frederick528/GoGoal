@@ -11,13 +11,12 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        instance ??= this;
-        //if (instance != null)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-        //instance = this;
-        //DontDestroyOnLoad(gameObject);
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -24,13 +25,25 @@ public class ButtonManager : MonoBehaviour
     public int collLimitNum1;
     public int collLimitNum2;
 
-    public GameObject description;
+    GameObject desWindow;
+    TMP_Text eventName;
+    Text eventDes;
+    Dictionary<string, string> desDict = 
+        new(){["Left"] = "공이 왼쪽으로 이동합니다.", ["Right"] = "공이 오른쪽으로 이동합니다.", ["Up"] = "공이 위쪽으로 이동합니다.",
+            ["IncreaseGravity"] = "중력이 강해집니다.", ["DecreaseGravity"] = "중력이 약해집니다", ["ReverseGravity"] = "중력의 방향이 반대가 됩니다.",
+            ["IncreaseWeight"] = "공의 무게가 증가합니다.", ["DecreaseWeight"] = "공의 무게가 감소합니다."};
 
     public Btn currBtn {get; private set;}
 
     private void Awake()
     {
-        instance ??= this;
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -52,8 +65,10 @@ public class ButtonManager : MonoBehaviour
 
         eventBtnsArray[0].SetActive(true);
 
-        description = GameObject.Find("BtnDescription");
-        description.SetActive(false);
+        desWindow = GameObject.Find("BtnDescription");
+        eventName = desWindow.GetComponentInChildren<TMP_Text>();
+        eventDes = desWindow.GetComponentInChildren<Text>();
+        desWindow.SetActive(false);
 
         currBtn = startEvents[0];
         currBtn.img = currBtn.GetComponent<Image>();    // Get the current button image before gane start. (Because execution order issue for Btn and Button manager)
@@ -190,5 +205,27 @@ public class ButtonManager : MonoBehaviour
             curEBAIdx = eventBtnsArray.Length - 1;
 
         eventBtnsArray[curEBAIdx].SetActive(true);
+    }
+
+    void Description(string name)
+    {
+        eventName.text = name;
+        if (desDict.ContainsKey(name))
+        {
+            eventDes.text = desDict[name];
+        }
+        else
+        {
+            eventDes.text = "설명이 없습니다.";
+        }
+    }
+    public void DesWindowOn(string name)
+    {
+        desWindow.SetActive(true);
+        Description(name);
+    }
+    public void DesWindowOff()
+    {
+        desWindow.SetActive(false);
     }
 }

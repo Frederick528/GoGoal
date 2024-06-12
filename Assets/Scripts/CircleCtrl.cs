@@ -31,6 +31,9 @@ public class CircleCtrl : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         // Probably add effects by stage later. ex) 5 Collision = dead.
+        if (numberOfCollision >= 3)
+            return;
+
         ++numberOfCollision;
         switch (numberOfCollision)
         {
