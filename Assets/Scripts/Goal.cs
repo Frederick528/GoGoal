@@ -6,6 +6,6 @@ public class Goal : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        print("SSSS");
+        print("Clear");
     }
 }

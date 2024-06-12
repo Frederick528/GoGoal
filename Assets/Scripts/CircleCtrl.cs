@@ -78,6 +78,10 @@ public class CircleCtrl : MonoBehaviour
 
     public void Weight(float weight)
     {
-        rd.mass *= weight;
+        if (rd.mass * weight >= 10)
+            rd.mass = 10;
+        else if (rd.mass * weight <= 0.5f)
+            rd.mass = 0.5f;
+        else rd.mass *= weight;
     }
 }

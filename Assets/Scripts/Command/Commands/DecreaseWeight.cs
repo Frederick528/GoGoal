@@ -9,6 +9,6 @@ public class DecreaseWeight : Command
 
     public override void Execute()
     {
-        _controller.Weight(0.01f);
+        _controller.Weight(0.5f);
     }
 }

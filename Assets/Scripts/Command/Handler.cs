@@ -68,14 +68,14 @@ public class Handler : MonoBehaviour
                     startCount += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision1:
-                if (collCount1 >= ButtonManager.instance.collLimitNum1) break;
+                if (collCount1 > ButtonManager.instance.collLimitNum1) break;
                 else if (collCount1 == ButtonManager.instance.collLimitNum1)
                     EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 else
                     collCount1 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision2:
-                if (collCount2 >= ButtonManager.instance.collLimitNum2) break;
+                if (collCount2 > ButtonManager.instance.collLimitNum2) break;
                 else if (collCount2 == ButtonManager.instance.collLimitNum2)
                     EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 else

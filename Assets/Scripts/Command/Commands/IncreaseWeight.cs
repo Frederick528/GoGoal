@@ -9,6 +9,6 @@ public class IncreaseWeight : Command
 
     public override void Execute()
     {
-        _controller.Weight(100);
+        _controller.Weight(2);
     }
 }

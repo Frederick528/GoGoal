@@ -31,7 +31,7 @@ public class ButtonManager : MonoBehaviour
     Dictionary<string, string> desDict = 
         new(){["Left"] = "공이 왼쪽으로 이동합니다.", ["Right"] = "공이 오른쪽으로 이동합니다.", ["Up"] = "공이 위쪽으로 이동합니다.",
             ["IncreaseGravity"] = "중력이 강해집니다.", ["DecreaseGravity"] = "중력이 약해집니다", ["ReverseGravity"] = "중력의 방향이 반대가 됩니다.",
-            ["IncreaseWeight"] = "공의 무게가 증가합니다.", ["DecreaseWeight"] = "공의 무게가 감소합니다."};
+            ["IncreaseWeight"] = "공의 무게가 증가합니다. (최대 10)", ["DecreaseWeight"] = "공의 무게가 감소합니다. (최소 0.5)"};
 
     public Btn currBtn {get; private set;}
 
