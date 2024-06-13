@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool operable = true;
 
+    [SerializeField]
+    bool fastMode;
+
     void Awake()
     {
         if (instance != null)
@@ -19,4 +22,15 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (fastMode)
+        {
+            Time.timeScale = 3f;
+        }
+        else { Time.timeScale = 1; }
+    }
+#endif
 }
