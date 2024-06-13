@@ -8,8 +8,6 @@ public class Handler : MonoBehaviour
     CircleCtrl _controller;
     EventType selectType = EventType.Start;
 
-    int startCount, collCount1, collCount2;
-
     void Start()
     {
         //인보커 생성
@@ -61,25 +59,13 @@ public class Handler : MonoBehaviour
         switch (selectType)
         {
             case EventType.Start:
-                if (startCount > ButtonManager.instance.startLimitNum) break;
-                else if (startCount == ButtonManager.instance.startLimitNum)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
-                else
-                    startCount += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
+                EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision1:
-                if (collCount1 > ButtonManager.instance.collLimitNum1) break;
-                else if (collCount1 == ButtonManager.instance.collLimitNum1)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
-                else
-                    collCount1 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
+                EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
             case EventType.Collision2:
-                if (collCount2 > ButtonManager.instance.collLimitNum2) break;
-                else if (collCount2 == ButtonManager.instance.collLimitNum2)
-                    EventBus.ChangeSubscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
-                else
-                    collCount2 += EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
+                EventBus.Subscribe(selectType, () => invoker.ExecuteCommand(name), eventImage);
                 break;
         }
     }
@@ -92,16 +78,13 @@ public class Handler : MonoBehaviour
         switch (selectType)
         {
             case EventType.Start:
-                if (startCount <= 0 || ButtonManager.instance.currBtn == null) break;
-                startCount -= EventBus.Unsubscribe(selectType);
+                EventBus.Unsubscribe(selectType);
                 break;
             case EventType.Collision1:
-                if (collCount1 <= 0 || ButtonManager.instance.currBtn == null) break;
-                collCount1 -= EventBus.Unsubscribe(selectType);
+                EventBus.Unsubscribe(selectType);
                 break;
             case EventType.Collision2:
-                if (collCount2 <= 0 || ButtonManager.instance.currBtn == null) break;
-                collCount2 -= EventBus.Unsubscribe(selectType);
+                EventBus.Unsubscribe(selectType);
                 break;
         }
     }
@@ -113,6 +96,5 @@ public class Handler : MonoBehaviour
 
         EventBus.Clear();
         ButtonManager.instance.AllBtnActClear();
-        startCount = 0; collCount1 = 0; collCount2 = 0;
     }
 }
