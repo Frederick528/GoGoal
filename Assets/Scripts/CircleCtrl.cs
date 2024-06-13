@@ -26,7 +26,6 @@ public class CircleCtrl : MonoBehaviour
         _circleStateContext.Transition(_retryState);
 
         rd = GetComponent<Rigidbody>();
-        rd.isKinematic = true;
     }
 
     private void OnCollisionEnter(Collision collision)
